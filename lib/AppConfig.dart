@@ -1,5 +1,5 @@
 class AppConfig {
-  static const APP_ID = '7da0598b2479ac782ca31c6d418c22bd';
+  static const APP_ID = '';
 
   static bool isValidEmail(String emailId) {
     return RegExp(

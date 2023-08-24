@@ -181,9 +181,12 @@ class PreChatPageState extends State<PreChatPage> {
                     margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     height: 45,
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Color(0xff5c5aa7),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary:
+                            Color(0xff5c5aa7), // Set the button color to purple
+                        onPrimary: Colors.white, // Set the text color to white
+                      ),
                       child: Text('Start conversation'),
                       onPressed: () {
                         validateTextFields(context);

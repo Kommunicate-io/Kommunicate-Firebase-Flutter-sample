@@ -1,50 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences package
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 import 'package:pn/AppConfig.dart';
 import 'package:pn/prechat.dart';
 import 'home.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    super.dispose();
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final _firebaseMessaging = FirebaseMessaging.instance;
-    _firebaseMessaging.subscribeToTopic('all');
-    _firebaseMessaging.requestPermission();
-    _firebaseMessaging.getNotificationSettings();
-    _firebaseMessaging.getToken().then((token) {
-      print(token); // Print the Token in Console
-    });
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("message recieved");
-      print(event.notification!.body);
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('Message clicked!');
-    });
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -57,12 +24,15 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-// ignore: must_be_immutable
 class LoginPage extends StatelessWidget {
   TextEditingController userId = new TextEditingController();
   TextEditingController password = new TextEditingController();
 
-  void loginUser(context) {
+  void loginUser(context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userId', userId.text); // Store user ID
+    prefs.setString('password', password.text); // Store password
+
     dynamic user = {
       'userId': userId.text,
       'password': password.text,
@@ -125,19 +95,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      KommunicateFlutterPlugin.isLoggedIn().then((value) {
-        print("Logged in : " + value.toString());
-        if (value) {
-          Navigator.pop(context);
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
-        }
-      });
-    } on Exception catch (e) {
-      print("isLogged in error : " + e.toString());
-    }
-
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(36.0),
@@ -147,10 +104,6 @@ class LoginPage extends StatelessWidget {
           children: <Widget>[
             SizedBox(
               height: 155.0,
-              child: Image.asset(
-                "assets/ic_launcher_without_shape.png",
-                fit: BoxFit.contain,
-              ),
             ),
             new TextField(
               controller: userId,
