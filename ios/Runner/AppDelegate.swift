@@ -1,6 +1,6 @@
 import UIKit
 import Flutter
-import Firebase
+//import Firebase
 import Kommunicate
 @UIApplicationMain
 
@@ -13,7 +13,7 @@ import Kommunicate
         // Use Firebase library to configure APIs
         //FirebaseApp.configure()
         
-        Messaging.messaging().delegate = self
+//        Messaging.messaging().delegate = self
         
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
@@ -67,7 +67,7 @@ import Kommunicate
             completionHandler([])
             return
         } else {
-            Messaging.messaging().appDidReceiveMessage(userInfo)
+//            Messaging.messaging().appDidReceiveMessage(userInfo)
         }
         completionHandler([.sound, .badge, .alert])
     }
@@ -83,7 +83,7 @@ import Kommunicate
         if service.isApplozicNotification(dict) {
             service.processPushNotification(dict, appState: UIApplication.shared.applicationState)
         } else {
-            Messaging.messaging().appDidReceiveMessage(userInfo)
+//            Messaging.messaging().appDidReceiveMessage(userInfo)
         }
         completionHandler()
     }
@@ -102,7 +102,7 @@ import Kommunicate
         if service.isApplozicNotification(userInfo) {
             service.processPushNotification(userInfo, appState: UIApplication.shared.applicationState)
         } else {
-            Messaging.messaging().appDidReceiveMessage(userInfo)
+//            Messaging.messaging().appDidReceiveMessage(userInfo)
         }
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -124,28 +124,28 @@ import Kommunicate
                 print ("REGISTRATION_RESPONSE :: \(String(describing: response))")
             })
         }
-        Messaging.messaging().apnsToken = deviceToken;
+//        Messaging.messaging().apnsToken = deviceToken;
     }
     
     override func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register for notifications: \(error.localizedDescription)")
     }
 }
-
-extension AppDelegate: MessagingDelegate {
-    
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("Firebase registration token: \(String(describing: fcmToken))")
-        
-        let dataDict: [String: String] = ["token": fcmToken ?? ""]
-        NotificationCenter.default.post(
-            name: Notification.Name("FCMToken"),
-            object: nil,
-            userInfo: dataDict
-        )
-    }
-    
-    func messaging(_ messaging: Messaging, appDidReceiveMessage message: NSDictionary) {
-        print(message)
-    }
-}
+//
+//extension AppDelegate: MessagingDelegate {
+//
+//    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+//        print("Firebase registration token: \(String(describing: fcmToken))")
+//
+//        let dataDict: [String: String] = ["token": fcmToken ?? ""]
+//        NotificationCenter.default.post(
+//            name: Notification.Name("FCMToken"),
+//            object: nil,
+//            userInfo: dataDict
+//        )
+//    }
+//
+//    func messaging(_ messaging: Messaging, appDidReceiveMessage message: NSDictionary) {
+//        print(message)
+//    }
+//}
